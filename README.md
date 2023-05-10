@@ -1,3 +1,5 @@
+Project Summary
+
 The book recommendation system project aimed to build a comprehensive recommendation system that can provide users with personalized book recommendations. The project involved the implementation of four different recommendation techniques - user-based, item-based, knowledge-based, and matrix factorization, as well as the creation of a hybrid recommendation system that combines the strengths of each technique.
 
 The first technique applied was the user-based collaborative filtering approach, which uses the similarities between users to make recommendations. This method analyzed the user's historical book ratings and made recommendations based on similar ratings from other users.
