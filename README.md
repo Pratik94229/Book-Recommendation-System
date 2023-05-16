@@ -2,7 +2,7 @@
 This repository contains the code for a book recommendation system that uses natural language processing techniques to recommend books to users based on their preferences.
 
 ## Dataset
-The dataset used in this project is a collection of books from various genres, including fiction, non-fiction, romance, thriller, etc. Each book is represented by a set of features, including the author, publisher, publication date, genre, and user ratings.
+The dataset used in this project is a collection of books from various genres, including fiction, non-fiction, romance, thriller, etc. Each book is represented by a set of features, including the author, publisher, publication date, and user ratings.
 
 ## Approach
 The book recommendation system uses a content-based, collaborative filtering approach to recommend books to users. It leverages natural language processing techniques, such as matrix factorization, association rules, and topic modeling, to extract features from the books and user data.
