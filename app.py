@@ -119,34 +119,34 @@ book_pivot.fillna(0, inplace=True)
 
 
 
-# Page 1: Popular Books
+# Page 1: Popular Books page
 def popular_books_page():
     st.title("Most Popular Books")
-    # Set user-agent headers to simulate a web browser request
+    # Setting user-agent headers to simulate a web browser request
     headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
     }
 
-    # Set the number of columns in the grid
+    # Setting the number of columns in the grid
     num_columns = 5
 
-    # Create a container for the grid layout
+    # Creating a container for the grid layout
     container = st.container()
 
     # Iterate through each row in the dataframe
     for index, row in popular_books.iterrows():
-        # Get the values from the current row
+        # Getting the values from the current row
         book_title = row['Book-Title']
         publisher = row['Publisher']
         image_url = row['Image-URL-M']
 
-        # Download the image from the provided URL
+        # Downloading the image from the provided URL
         response = requests.get(image_url, headers=headers)
 
-        # Convert the image content to PIL Image object
+        # Converting the image content to PIL Image object
         image = Image.open(BytesIO(response.content))
 
-        # Display the book image, title, and publisher in a column
+        # Displaying the book image, title, and publisher in a column
         columns = container.columns(num_columns)
         book_image_col = columns[0]
         book_title_col = columns[1]
@@ -186,7 +186,7 @@ def item_based_page():
               df = pd.DataFrame()
               df=merged_dataset[merged_dataset['Book-Title']==book_pivot.index[suggestions[0][i]]].drop_duplicates('Book-Title')[['Book-Title','Book-Author','Year-Of-Publication','Publisher','Image-URL-M']]
               new_df=new_df.append(df, ignore_index=True)
-              # Drop a row based on column value
+              # Dropping a row based on column value
               column_name = 'Book-Title'
               value_to_drop = book_name
               new_df = new_df[new_df[column_name] != value_to_drop]
@@ -200,32 +200,32 @@ def item_based_page():
         selected_book = st.selectbox("Select book user like", book_list)
         st.write("User may also like:")
 
-        # Set user-agent headers to simulate a web browser request
+        # Setting user-agent headers to simulate a web browser request
         headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
         }
 
-        # Set the number of columns in the grid
+        # Setting the number of columns in the grid
         num_columns = 5
 
-        # Create a container for the grid layout
+        # Creating a container for the grid layout
         container = st.container()
     
         books=Item_based_recomm(book_pivot,selected_book)
-        # Iterate through each row in the dataframe
+        # Iterating through each row in the dataframe
         for index, row in books.iterrows():
-            # Get the values from the current row
+            # Getting the values from the current row
             book_title = row['Book-Title']
             publisher = row['Publisher']
             image_url = row['Image-URL-M']
 
-            # Download the image from the provided URL
+            # Downloading the image from the provided URL
             response = requests.get(image_url, headers=headers)
 
-            # Convert the image content to PIL Image object
+            # Converting the image content to PIL Image object
             image = Image.open(BytesIO(response.content))
 
-            # Display the book image, title, and publisher in a column
+            # Displaying the book image, title, and publisher in a column
             columns = container.columns(num_columns)
             book_image_col = columns[0]
             book_title_col = columns[1]
@@ -408,31 +408,31 @@ def user_based_page():
     st.write("Recommended books for user based on liked books.")
     recommend=topNRecommendations(selected_user,10)
 
-    # Set user-agent headers to simulate a web browser request
+    # Setting user-agent headers to simulate a web browser request
     headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
     }
 
-    # Set the number of columns in the grid
+    # Setting the number of columns in the grid
     num_columns = 5
 
-    # Create a container for the grid layout
+    # Creating a container for the grid layout
     container = st.container()
 
-    # Iterate through each row in the dataframe
+    # Iterating through each row in the dataframe
     for index, row in recommend.iterrows():
         # Get the values from the current row
         book_title = row['Book-Title']
         publisher = row['Publisher']
         image_url = row['Image-URL-M']
 
-        # Download the image from the provided URL
+        # Downloading the image from the provided URL
         response = requests.get(image_url, headers=headers)
 
         # Convert the image content to PIL Image object
         image = Image.open(BytesIO(response.content))
 
-        # Display the book image, title, and publisher in a column
+        # Displaying the book image, title, and publisher in a column
         columns = container.columns(num_columns)
         book_image_col = columns[0]
         book_title_col = columns[1]
@@ -559,32 +559,32 @@ def matrix_factorization_page():
     selected_user = st.selectbox("Select User ID for prediction",userItemRatingMatrix.index)
     recommend=matrix_fac_recommendation(selected_user)  
 
-    # Set user-agent headers to simulate a web browser request
+    # Setting user-agent headers to simulate a web browser request
     headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
     }
 
-    # Set the number of columns in the grid
+    # Setting the number of columns in the grid
     num_columns = 5
 
-    # Create a container for the grid layout
+    # Creating a container for the grid layout
     container = st.container()
     
     try:
-        # Iterate through each row in the dataframe
+        # Iterating through each row in the dataframe
         for index, row in recommend.iterrows():
             # Get the values from the current row
                 book_title = row['Book-Title']
                 publisher = row['Publisher']
                 image_url = row['Image-URL-M']
 
-                # Download the image from the provided URL
+                # Downloading the image from the provided URL
                 response = requests.get(image_url, headers=headers)
 
-                # Convert the image content to PIL Image object
+                # Converting the image content to PIL Image object
                 image = Image.open(BytesIO(response.content))
 
-                # Display the book image, title, and publisher in a column
+                # Displaying the book image, title, and publisher in a column
                 columns = container.columns(num_columns)
                 book_image_col = columns[0]
                 book_title_col = columns[1]
@@ -925,7 +925,7 @@ def hyb_recommendation_page():
 
 
 
-
+#Implementing hybrid recommendation system
 
     def Hybrid_recommender(user_id,book_name,popular_books):
        #finding author of the book
@@ -979,32 +979,32 @@ def hyb_recommendation_page():
     selected_book = st.selectbox("Select book liked by user",userItemRatingMatrix.columns)
     recommend=Hybrid_recommender(selected_user,selected_book,popular_books)  
 
-    # Set user-agent headers to simulate a web browser request
+    # Setting user-agent headers to simulate a web browser request
     headers = {
     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
     }
 
-    # Set the number of columns in the grid
+    # Setting the number of columns in the grid
     num_columns = 5
 
-    # Create a container for the grid layout
+    # Creating a container for the grid layout
     container = st.container()
     
     try:
-        # Iterate through each row in the dataframe
+        # Iterating through each row in the dataframe
         for index, row in recommend.iterrows():
-            # Get the values from the current row
+            # Getting the values from the current row
                 book_title = row['Book-Title']
                 publisher = row['Publisher']
                 image_url = row['Image-URL-M']
 
-                # Download the image from the provided URL
+                # Downloading the image from the provided URL
                 response = requests.get(image_url, headers=headers)
 
-                # Convert the image content to PIL Image object
+                # Converting the image content to PIL Image object
                 image = Image.open(BytesIO(response.content))
 
-                # Display the book image, title, and publisher in a column
+                # Displaying the book image, title, and publisher in a column
                 columns = container.columns(num_columns)
                 book_image_col = columns[0]
                 book_title_col = columns[1]
@@ -1019,7 +1019,7 @@ def hyb_recommendation_page():
         print("Unable to predict due to insufficient information")    
 
 
-# Create a dictionary of page names and corresponding function names
+# Creating a dictionary of page names and corresponding function names
 pages = {
     "Popularity Based Recommendation": popular_books_page,
     "Item Based collaborative filtering": item_based_page,
@@ -1028,10 +1028,10 @@ pages = {
     "Hybrid Recommendation System": hyb_recommendation_page
 }
 
-# Sidebar
+# code for Sidebar
 st.sidebar.title("Book Recommendation System")
 selected_page = st.sidebar.selectbox("Select a page", list(pages.keys()))
 
-# Run the selected page function
+# Running the selected page function
 pages[selected_page]()
 
