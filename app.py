@@ -196,6 +196,7 @@ def item_based_page():
            return None
 
     try:
+        st.header('Item Based collaborative filtering')
         # Single select
         selected_book = st.selectbox("Select book user like", book_list)
         st.write("User may also like:")
@@ -210,32 +211,32 @@ def item_based_page():
 
         # Creating a container for the grid layout
         container = st.container()
-    
-        books=Item_based_recomm(book_pivot,selected_book)
-        # Iterating through each row in the dataframe
-        for index, row in books.iterrows():
-            # Getting the values from the current row
-            book_title = row['Book-Title']
-            publisher = row['Publisher']
-            image_url = row['Image-URL-M']
+        if st.button('Predict'):
+            books=Item_based_recomm(book_pivot,selected_book)
+            # Iterating through each row in the dataframe
+            for index, row in books.iterrows():
+                # Getting the values from the current row
+                book_title = row['Book-Title']
+                publisher = row['Publisher']
+                image_url = row['Image-URL-M']
 
-            # Downloading the image from the provided URL
-            response = requests.get(image_url, headers=headers)
+                # Downloading the image from the provided URL
+                response = requests.get(image_url, headers=headers)
 
-            # Converting the image content to PIL Image object
-            image = Image.open(BytesIO(response.content))
+                # Converting the image content to PIL Image object
+                image = Image.open(BytesIO(response.content))
 
-            # Displaying the book image, title, and publisher in a column
-            columns = container.columns(num_columns)
-            book_image_col = columns[0]
-            book_title_col = columns[1]
-            publisher_col = columns[2]
+                # Displaying the book image, title, and publisher in a column
+                columns = container.columns(num_columns)
+                book_image_col = columns[0]
+                book_title_col = columns[1]
+                publisher_col = columns[2]
 
-            book_image_col.image(image, caption="Book Image")
-            book_title_col.write("Book Title:")
-            book_title_col.write(book_title)
-            publisher_col.write("Publisher:")
-            publisher_col.write(publisher)
+                book_image_col.image(image, caption="Book Image")
+                book_title_col.write("Book Title:")
+                book_title_col.write(book_title)
+                publisher_col.write("Publisher:")
+                publisher_col.write(publisher)
     except:
         print('User information not found')
 
@@ -284,7 +285,7 @@ def user_based_page():
                                     columns=['Book-Title'])
 
     
-    st.title("Select User for prediction")
+    st.header("User based collaborative filtering")
 
     # Single select
     selected_user = st.selectbox("Select User ID for prediction",final_filtered_df['User-ID'].unique())
@@ -399,50 +400,59 @@ def user_based_page():
       except:
         return None
       
-    fav_books=pd.DataFrame([favoritebook(selected_user,10)]).T
-    new_columns = {0:'Favourite Books'}
-    fav_books = fav_books.rename(columns=new_columns)
+    
 
-    st.write(f'Most favourite books of users')
-    st.write(fav_books)
-    st.write("Recommended books for user based on liked books.")
-    recommend=topNRecommendations(selected_user,10)
+    
+    
 
-    # Setting user-agent headers to simulate a web browser request
-    headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
-    }
+    #Predicting for user 
 
-    # Setting the number of columns in the grid
-    num_columns = 5
+    if st.button('Predict'):
+        fav_books=pd.DataFrame([favoritebook(selected_user,10)]).T
+        new_columns = {0:'Favourite Books'}
+        fav_books = fav_books.rename(columns=new_columns)
 
-    # Creating a container for the grid layout
-    container = st.container()
+        st.write(f'Most favourite books of users')
+        st.write(fav_books)
+        st.write("Recommended books for user based on liked books.")
+        recommend=topNRecommendations(selected_user,10)
+        # Setting user-agent headers to simulate a web browser request
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"}
 
-    # Iterating through each row in the dataframe
-    for index, row in recommend.iterrows():
-        # Get the values from the current row
-        book_title = row['Book-Title']
-        publisher = row['Publisher']
-        image_url = row['Image-URL-M']
+        # Setting the number of columns in the grid
+        num_columns = 5
 
-        # Downloading the image from the provided URL
-        response = requests.get(image_url, headers=headers)
+        # Creating a container for the grid layout
+        container = st.container()
+    
+        try:
+            # Iterating through each row in the dataframe
+            for index, row in recommend.iterrows():
+                # Getting the values from the current row
+                    book_title = row['Book-Title']
+                    publisher = row['Publisher']
+                    image_url = row['Image-URL-M']
 
-        # Convert the image content to PIL Image object
-        image = Image.open(BytesIO(response.content))
+                    # Downloading the image from the provided URL
+                    response = requests.get(image_url, headers=headers)
 
-        # Displaying the book image, title, and publisher in a column
-        columns = container.columns(num_columns)
-        book_image_col = columns[0]
-        book_title_col = columns[1]
-        publisher_col = columns[2]
+                    # Converting the image content to PIL Image object
+                    image = Image.open(BytesIO(response.content))
 
-        book_image_col.image(image, caption="Book Image")
-        book_title_col.write("Book Title:")
-        book_title_col.write(book_title)
-        publisher_col.write("Publisher:")
-        publisher_col.write(publisher)
+                    # Displaying the book image, title, and publisher in a column
+                    columns = container.columns(num_columns)
+                    book_image_col = columns[0]
+                    book_title_col = columns[1]
+                    publisher_col = columns[2]
+
+                    book_image_col.image(image, caption="Book Image")
+                    book_title_col.write("Book Title:")
+                    book_title_col.write(book_title)
+                    publisher_col.write("Publisher:")
+                    publisher_col.write(publisher)
+        except:
+            print("Unable to predict due to insufficient information")             
+  
   
 
 
@@ -557,46 +567,46 @@ def matrix_factorization_page():
   
     #Predicting for user 
     selected_user = st.selectbox("Select User ID for prediction",userItemRatingMatrix.index)
-    recommend=matrix_fac_recommendation(selected_user)  
+    #recommend=matrix_fac_recommendation(selected_user)  
 
-    # Setting user-agent headers to simulate a web browser request
-    headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
-    }
+    if st.button('Predict'):
+        recommend=matrix_fac_recommendation(selected_user)
+        # Setting user-agent headers to simulate a web browser request
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"}
 
-    # Setting the number of columns in the grid
-    num_columns = 5
+        # Setting the number of columns in the grid
+        num_columns = 5
 
-    # Creating a container for the grid layout
-    container = st.container()
+        # Creating a container for the grid layout
+        container = st.container()
     
-    try:
-        # Iterating through each row in the dataframe
-        for index, row in recommend.iterrows():
-            # Get the values from the current row
-                book_title = row['Book-Title']
-                publisher = row['Publisher']
-                image_url = row['Image-URL-M']
+        try:
+            # Iterating through each row in the dataframe
+            for index, row in recommend.iterrows():
+                # Getting the values from the current row
+                    book_title = row['Book-Title']
+                    publisher = row['Publisher']
+                    image_url = row['Image-URL-M']
 
-                # Downloading the image from the provided URL
-                response = requests.get(image_url, headers=headers)
+                    # Downloading the image from the provided URL
+                    response = requests.get(image_url, headers=headers)
 
-                # Converting the image content to PIL Image object
-                image = Image.open(BytesIO(response.content))
+                    # Converting the image content to PIL Image object
+                    image = Image.open(BytesIO(response.content))
 
-                # Displaying the book image, title, and publisher in a column
-                columns = container.columns(num_columns)
-                book_image_col = columns[0]
-                book_title_col = columns[1]
-                publisher_col = columns[2]
+                    # Displaying the book image, title, and publisher in a column
+                    columns = container.columns(num_columns)
+                    book_image_col = columns[0]
+                    book_title_col = columns[1]
+                    publisher_col = columns[2]
 
-                book_image_col.image(image, caption="Book Image")
-                book_title_col.write("Book Title:")
-                book_title_col.write(book_title)
-                publisher_col.write("Publisher:")
-                publisher_col.write(publisher)
-    except:
-        print("Unable to predict due to insufficient information")            
+                    book_image_col.image(image, caption="Book Image")
+                    book_title_col.write("Book Title:")
+                    book_title_col.write(book_title)
+                    publisher_col.write("Publisher:")
+                    publisher_col.write(publisher)
+        except:
+            print("Unable to predict due to insufficient information")             
   
  
 # Page 5: Hybrid Recommendation system
@@ -977,46 +987,45 @@ def hyb_recommendation_page():
     #Predicting for user 
     selected_user = st.selectbox("Select User ID for prediction",userItemRatingMatrix.index)
     selected_book = st.selectbox("Select book liked by user",userItemRatingMatrix.columns)
-    recommend=Hybrid_recommender(selected_user,selected_book,popular_books)  
-
-    # Setting user-agent headers to simulate a web browser request
-    headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"
-    }
-
-    # Setting the number of columns in the grid
-    num_columns = 5
-
-    # Creating a container for the grid layout
-    container = st.container()
     
-    try:
-        # Iterating through each row in the dataframe
-        for index, row in recommend.iterrows():
-            # Getting the values from the current row
-                book_title = row['Book-Title']
-                publisher = row['Publisher']
-                image_url = row['Image-URL-M']
+    if st.button('Predict'):
+        recommend=Hybrid_recommender(selected_user,selected_book,popular_books)
+        # Setting user-agent headers to simulate a web browser request
+        headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36"}
 
-                # Downloading the image from the provided URL
-                response = requests.get(image_url, headers=headers)
+        # Setting the number of columns in the grid
+        num_columns = 5
 
-                # Converting the image content to PIL Image object
-                image = Image.open(BytesIO(response.content))
+        # Creating a container for the grid layout
+        container = st.container()
+    
+        try:
+            # Iterating through each row in the dataframe
+            for index, row in recommend.iterrows():
+                # Getting the values from the current row
+                    book_title = row['Book-Title']
+                    publisher = row['Publisher']
+                    image_url = row['Image-URL-M']
 
-                # Displaying the book image, title, and publisher in a column
-                columns = container.columns(num_columns)
-                book_image_col = columns[0]
-                book_title_col = columns[1]
-                publisher_col = columns[2]
+                    # Downloading the image from the provided URL
+                    response = requests.get(image_url, headers=headers)
 
-                book_image_col.image(image, caption="Book Image")
-                book_title_col.write("Book Title:")
-                book_title_col.write(book_title)
-                publisher_col.write("Publisher:")
-                publisher_col.write(publisher)
-    except:
-        print("Unable to predict due to insufficient information")    
+                    # Converting the image content to PIL Image object
+                    image = Image.open(BytesIO(response.content))
+
+                    # Displaying the book image, title, and publisher in a column
+                    columns = container.columns(num_columns)
+                    book_image_col = columns[0]
+                    book_title_col = columns[1]
+                    publisher_col = columns[2]
+
+                    book_image_col.image(image, caption="Book Image")
+                    book_title_col.write("Book Title:")
+                    book_title_col.write(book_title)
+                    publisher_col.write("Publisher:")
+                    publisher_col.write(publisher)
+        except:
+            print("Unable to predict due to insufficient information")    
 
 
 # Creating a dictionary of page names and corresponding function names
