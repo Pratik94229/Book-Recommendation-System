@@ -920,21 +920,6 @@ def hyb_recommendation_page():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #Implementing hybrid recommendation system
 
     def Hybrid_recommender(user_id,book_name,popular_books):
